@@ -52,6 +52,9 @@ class autoencoder(nn.Module):
             nn.ReLU(True),
             nn.Conv2d(512, 1024, 4, stride=2, padding=1),
             nn.BatchNorm2d(1024),
+            nn.ReLU(True),
+            nn.Conv2d(1024, 2048, 4, stride=2, padding=1),
+            nn.BatchNorm2d(2048),
             nn.ReLU(True)
             # nn.MaxPool2d(2, stride=1)
         )
@@ -65,6 +68,9 @@ class autoencoder(nn.Module):
         )
 
         self.decoder = nn.Sequential(
+            nn.ConvTranspose2d(2048, 1024, 4, stride=2, padding=1),
+            nn.BatchNorm2d(1024),
+            nn.ReLU(True),
             nn.ConvTranspose2d(1024, 512, 4, stride=2, padding=1),
             nn.BatchNorm2d(512),
             nn.ReLU(True),
