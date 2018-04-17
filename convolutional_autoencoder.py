@@ -97,7 +97,7 @@ class autoencoder(nn.Module):
 
 use_gpu = False # torch.cuda.is_available()
 
-print('GPU avalible ' + torch.cuda.is_available() )
+print( 'GPU avalible {}'.format(torch.cuda.is_available()) )
 
 model = autoencoder()
 
