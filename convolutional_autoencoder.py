@@ -24,7 +24,7 @@ def to_img(x):
 
 num_epochs = 100
 batch_size = 32
-learning_rate = 1e-3
+learning_rate = 1e-2
 
 img_transform = transforms.Compose([
     transforms.ToTensor(),
@@ -97,6 +97,8 @@ class autoencoder(nn.Module):
 
 use_gpu = False # torch.cuda.is_available()
 
+print('GPU avalible ' + torch.cuda.is_available() )
+
 model = autoencoder()
 
 if use_gpu:
@@ -133,6 +135,9 @@ for epoch in range(num_epochs):
     # ===================log========================
     print('epoch [{}/{}], loss:{:.4f}'
           .format(epoch+1, num_epochs, loss.data[0]))
+    
+    if epoch % 10 == 0:
+        torch.save(model.state_dict(), './conv_autoencoder_{}.pth'.format(epoch))
 
     pic = to_img(output.cpu().data)
     save_image(pic, './dc_img/image_{}.png'.format(epoch))
