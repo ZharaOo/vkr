@@ -24,7 +24,7 @@ def to_img(x):
 
 num_epochs = 50
 batch_size = 100
-learning_rate = 1e-2
+learning_rate = 1e-3
 
 img_transform = transforms.Compose([
     transforms.ToTensor(),
@@ -40,14 +40,11 @@ class autoencoder(nn.Module):
         super(autoencoder, self).__init__()
 
         self.encoder = nn.Sequential(
-            nn.Conv2d(1, 32, 4, stride=2, padding=1),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(1, 64, 4, stride=2, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(True),
             # nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(32, 128, 4, stride=2, padding=1),
-            nn.BatchNorm2d(128),
-            nn.ReLU(True),
-            nn.Conv2d(128, 256, 4, stride=2, padding=1),
+            nn.Conv2d(64, 256, 4, stride=2, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(True),
             nn.Conv2d(256, 512, 4, stride=2, padding=1),
@@ -74,13 +71,10 @@ class autoencoder(nn.Module):
             nn.ConvTranspose2d(512, 256, 4, stride=2, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(True),
-            nn.ConvTranspose2d(256, 128, 4, stride=2, padding=1),
-            nn.BatchNorm2d(128),
+            nn.ConvTranspose2d(256, 64, 4, stride=2, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(True),
-            nn.ConvTranspose2d(128, 32, 4, stride=2, padding=1),
-            nn.BatchNorm2d(32),
-            nn.ReLU(True),
-            nn.ConvTranspose2d(32, 1, 4, stride=2, padding=1),
+            nn.ConvTranspose2d(64, 1, 4, stride=2, padding=1),
             nn.Tanh()
         )
 
