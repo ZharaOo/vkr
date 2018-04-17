@@ -95,7 +95,7 @@ class autoencoder(nn.Module):
 #     for param_group in optimizer.param_groups:
 #         param_group['lr'] = lr
 
-use_gpu = torch.cuda.is_available()
+use_gpu = False # torch.cuda.is_available()
 
 model = autoencoder()
 
