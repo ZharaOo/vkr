@@ -7,7 +7,7 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from torchvision.utils import save_image
-from torchvision.datasets import MNIST
+
 import os
 
 import LungsDataset as ld
@@ -22,8 +22,8 @@ def to_img(x):
     x = x.view(x.size(0), 1, 128, 128)
     return x
 
-num_epochs = 100
-batch_size = 32
+num_epochs = 50
+batch_size = 100
 learning_rate = 1e-2
 
 img_transform = transforms.Compose([
@@ -40,11 +40,14 @@ class autoencoder(nn.Module):
         super(autoencoder, self).__init__()
 
         self.encoder = nn.Sequential(
-            nn.Conv2d(1, 64, 4, stride=2, padding=1),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(1, 32, 4, stride=2, padding=1),
+            nn.BatchNorm2d(32),
             nn.ReLU(True),
             # nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(64, 256, 4, stride=2, padding=1),
+            nn.Conv2d(32, 128, 4, stride=2, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(True),
+            nn.Conv2d(128, 256, 4, stride=2, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(True),
             nn.Conv2d(256, 512, 4, stride=2, padding=1),
@@ -52,9 +55,6 @@ class autoencoder(nn.Module):
             nn.ReLU(True),
             nn.Conv2d(512, 1024, 4, stride=2, padding=1),
             nn.BatchNorm2d(1024),
-            nn.ReLU(True),
-            nn.Conv2d(1024, 2048, 4, stride=2, padding=1),
-            nn.BatchNorm2d(2048),
             nn.ReLU(True)
             # nn.MaxPool2d(2, stride=1)
         )
@@ -68,19 +68,19 @@ class autoencoder(nn.Module):
         )
 
         self.decoder = nn.Sequential(
-            nn.ConvTranspose2d(2048, 1024, 4, stride=2, padding=1),
-            nn.BatchNorm2d(1024),
-            nn.ReLU(True),
             nn.ConvTranspose2d(1024, 512, 4, stride=2, padding=1),
             nn.BatchNorm2d(512),
             nn.ReLU(True),
             nn.ConvTranspose2d(512, 256, 4, stride=2, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(True),
-            nn.ConvTranspose2d(256, 64, 4, stride=2, padding=1),
-            nn.BatchNorm2d(64),
+            nn.ConvTranspose2d(256, 128, 4, stride=2, padding=1),
+            nn.BatchNorm2d(128),
             nn.ReLU(True),
-            nn.ConvTranspose2d(64, 1, 4, stride=2, padding=1),
+            nn.ConvTranspose2d(128, 32, 4, stride=2, padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(32, 1, 4, stride=2, padding=1),
             nn.Tanh()
         )
 
