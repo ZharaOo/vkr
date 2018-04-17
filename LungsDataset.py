@@ -1,5 +1,5 @@
 from torch.utils.data import Dataset
-import cv2
+# import cv2
 import glob
 import numpy as np
 from PIL import Image
@@ -29,9 +29,9 @@ class LungsDataset(Dataset):
         return len(self.lungs)
 
     def __getitem__(self, idx):
-        # img = Image.open(self.lungs[idx]).convert('LA')
+        img = Image.open(self.lungs[idx]).convert('L')
 
-        img = cv2.imread(self.lungs[idx], 0)
+        # img = cv2.imread(self.lungs[idx], 0)
 
         img = np.array(img, dtype='float32').reshape(128,128,1)
 
