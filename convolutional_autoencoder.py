@@ -39,7 +39,7 @@ class autoencoder(nn.Module):
 
         self.encoder = nn.Sequential(
             nn.Conv2d(1, 32, 4, stride=2, padding=1),
-            nn.BatchNorm2d(64),
+            nn.BatchNorm2d(32),
             nn.ReLU(True),
             # nn.MaxPool2d(2, stride=2),
             nn.Conv2d(32, 128, 4, stride=2, padding=1),
