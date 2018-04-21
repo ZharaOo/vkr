@@ -1,4 +1,5 @@
-__author__ = 'SherlockLiao'
+import mkl
+mkl.set_num_threads(56)
 
 import torch
 import torchvision
@@ -24,7 +25,7 @@ def to_img(x):
 
 num_epochs = 50
 batch_size = 32
-learning_rate = 1e-2
+learning_rate = 1e-3
 
 img_transform = transforms.Compose([
     transforms.ToTensor(),
@@ -40,17 +41,20 @@ class autoencoder(nn.Module):
         super(autoencoder, self).__init__()
 
         self.encoder = nn.Sequential(
-            nn.Conv2d(1, 64, 4, stride=2, padding=1),
+            nn.Conv2d(1, 32, 4, stride=2, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(True),
             # nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(64, 256, 4, stride=2, padding=1),
+            nn.Conv2d(32, 128, 4, stride=2, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(True),
+            nn.Conv2d(128, 256, 4, stride=2, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(True),
             nn.Conv2d(256, 512, 4, stride=2, padding=1),
             nn.BatchNorm2d(512),
             nn.ReLU(True),
-            nn.Conv2d(512, 1024, 4, stride=2, padding=1),
+	    nn.Conv2d(512, 1024, 4, stride=2, padding=1),
             nn.BatchNorm2d(1024),
             nn.ReLU(True)
             # nn.MaxPool2d(2, stride=1)
@@ -65,16 +69,19 @@ class autoencoder(nn.Module):
         )
 
         self.decoder = nn.Sequential(
-            nn.ConvTranspose2d(1024, 512, 4, stride=2, padding=1),
+	    nn.ConvTranspose2d(1024, 512, 4, stride=2, padding=1),
             nn.BatchNorm2d(512),
             nn.ReLU(True),
             nn.ConvTranspose2d(512, 256, 4, stride=2, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(True),
-            nn.ConvTranspose2d(256, 64, 4, stride=2, padding=1),
-            nn.BatchNorm2d(64),
+            nn.ConvTranspose2d(256, 128, 4, stride=2, padding=1),
+            nn.BatchNorm2d(128),
             nn.ReLU(True),
-            nn.ConvTranspose2d(64, 1, 4, stride=2, padding=1),
+            nn.ConvTranspose2d(128, 32, 4, stride=2, padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(32, 1, 4, stride=2, padding=1),
             nn.Tanh()
         )
 
@@ -108,8 +115,9 @@ criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate,
                              weight_decay=1e-5)
 
+i = 0
+
 for epoch in range(num_epochs):
-    i = 0
     for data in dataloader:
         img = data
         if use_gpu:
@@ -124,10 +132,11 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+
         print("batch")
 
         if i % 30 == 0:
-            print('epoch {}, iter {}, loss:{:.4f}'
+            print('({}, loss:{:.4f}),'
                   .format(epoch + 1, i, loss.data[0]))
 
         i += 1
@@ -136,7 +145,7 @@ for epoch in range(num_epochs):
     print('epoch [{}/{}], loss:{:.4f}'
           .format(epoch+1, num_epochs, loss.data[0]))
     
-    if epoch % 10 == 0:
+    if epoch % 4 == 0:
         torch.save(model.state_dict(), './conv_autoencoder_{}.pth'.format(epoch))
 
     pic = to_img(output.cpu().data)
