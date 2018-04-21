@@ -1,6 +1,3 @@
-import mkl
-mkl.set_num_threads(56)
-
 import torch
 import torchvision
 from torch import nn
