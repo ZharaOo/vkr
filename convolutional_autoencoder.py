@@ -38,21 +38,21 @@ class autoencoder(nn.Module):
         super(autoencoder, self).__init__()
 
         self.encoder = nn.Sequential(
-            nn.Conv2d(1, 32, 4, stride=2, padding=1),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(1, 4, 4, stride=2, padding=1),
+            nn.BatchNorm2d(4),
             nn.ReLU(True),
             # nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(32, 128, 4, stride=2, padding=1),
-            nn.BatchNorm2d(128),
+            nn.Conv2d(4, 8, 4, stride=2, padding=1),
+            nn.BatchNorm2d(8),
             nn.ReLU(True),
-            nn.Conv2d(128, 256, 4, stride=2, padding=1),
-            nn.BatchNorm2d(256),
+            nn.Conv2d(8, 16, 4, stride=2, padding=1),
+            nn.BatchNorm2d(16),
             nn.ReLU(True),
-            nn.Conv2d(256, 512, 4, stride=2, padding=1),
-            nn.BatchNorm2d(512),
+            nn.Conv2d(16, 32, 4, stride=2, padding=1),
+            nn.BatchNorm2d(32),
             nn.ReLU(True),
-	    nn.Conv2d(512, 1024, 4, stride=2, padding=1),
-            nn.BatchNorm2d(1024),
+	    nn.Conv2d(32, 64, 4, stride=2, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(True)
             # nn.MaxPool2d(2, stride=1)
         )
@@ -66,19 +66,19 @@ class autoencoder(nn.Module):
         )
 
         self.decoder = nn.Sequential(
-	    nn.ConvTranspose2d(1024, 512, 4, stride=2, padding=1),
-            nn.BatchNorm2d(512),
-            nn.ReLU(True),
-            nn.ConvTranspose2d(512, 256, 4, stride=2, padding=1),
-            nn.BatchNorm2d(256),
-            nn.ReLU(True),
-            nn.ConvTranspose2d(256, 128, 4, stride=2, padding=1),
-            nn.BatchNorm2d(128),
-            nn.ReLU(True),
-            nn.ConvTranspose2d(128, 32, 4, stride=2, padding=1),
+	    nn.ConvTranspose2d(64, 32, 4, stride=2, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU(True),
-            nn.ConvTranspose2d(32, 1, 4, stride=2, padding=1),
+            nn.ConvTranspose2d(32, 16, 4, stride=2, padding=1),
+            nn.BatchNorm2d(16),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(16, 8, 4, stride=2, padding=1),
+            nn.BatchNorm2d(8),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(8, 4, 4, stride=2, padding=1),
+            nn.BatchNorm2d(4),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(4, 1, 4, stride=2, padding=1),
             nn.Tanh()
         )
 
