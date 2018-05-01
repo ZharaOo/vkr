@@ -136,7 +136,7 @@ for epoch in range(num_epochs):
 
         if i % 30 == 0:
             print('({}, loss:{:.4f}),'
-                  .format(epoch + 1, i, loss.data[0]))
+                  .format(i, loss.data[0]))
 
         i += 1
 
