@@ -58,11 +58,11 @@ class autoencoder(nn.Module):
         )
 
         self.encoderLinear = nn.Sequential(
-            nn.Linear(8*8*1024, 4096)
+            nn.Linear(4*4*64, 100)
         )
 
         self.decoderLinear = nn.Sequential(
-            nn.Linear(4096, 8 * 8 * 1024)
+            nn.Linear(100, 4 * 4 * 64)
         )
 
         self.decoder = nn.Sequential(
@@ -84,11 +84,13 @@ class autoencoder(nn.Module):
 
     def forward(self, x):
         x = self.encoder(x)
-        # print(x)
-        # x = x.view(x.size(0), 8 * 8 * 1024)
-        # x = self.encoderLinear(x)
-        # x = self.decoderLinear(x)
-        # x = x.view(x.size(0), 1024, 8, 8)
+	
+        x = x.view(x.size(0), 4 * 4 * 64)
+        x = self.encoderLinear(x)
+	
+        x = self.decoderLinear(x)
+        x = x.view(x.size(0), 64, 4, 4)
+	
         x = self.decoder(x)
         return x
 
