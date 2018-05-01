@@ -58,13 +58,17 @@ class autoencoder(nn.Module):
         )
 
         self.encoderLinear = nn.Sequential(
-            nn.Linear(4*4*128, 1024),
-	    nn.Linear(1024, 100)
+            nn.Linear(4*4*128, 512),
+	    nn.ReLU(True),
+	    nn.Linear(512, 64),
+	    nn.ReLU(True)
         )
 
         self.decoderLinear = nn.Sequential(
-            nn.Linear(100, 1024),
-	    nn.Linear(1024, 4*4*128),
+            nn.Linear(64, 512),
+	    nn.ReLU(True),
+	    nn.Linear(512, 4*4*128),
+	    nn.ReLU(True)
         )
 
         self.decoder = nn.Sequential(
