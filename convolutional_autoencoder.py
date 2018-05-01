@@ -38,13 +38,10 @@ class autoencoder(nn.Module):
         super(autoencoder, self).__init__()
 
         self.encoder = nn.Sequential(
-            nn.Conv2d(1, 4, 4, stride=2, padding=1),
-            nn.BatchNorm2d(4),
-            nn.ReLU(True),
-            # nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(4, 8, 4, stride=2, padding=1),
+            nn.Conv2d(1, 8, 4, stride=2, padding=1),
             nn.BatchNorm2d(8),
             nn.ReLU(True),
+            # nn.MaxPool2d(2, stride=2),
             nn.Conv2d(8, 16, 4, stride=2, padding=1),
             nn.BatchNorm2d(16),
             nn.ReLU(True),
@@ -53,19 +50,27 @@ class autoencoder(nn.Module):
             nn.ReLU(True),
 	    nn.Conv2d(32, 64, 4, stride=2, padding=1),
             nn.BatchNorm2d(64),
-            nn.ReLU(True)
+            nn.ReLU(True),
+            nn.Conv2d(64, 128, 4, stride=2, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(True),
             # nn.MaxPool2d(2, stride=1)
         )
 
         self.encoderLinear = nn.Sequential(
-            nn.Linear(4*4*64, 100)
+            nn.Linear(4*4*128, 1024),
+	    nn.Linear(1024, 100),
         )
 
         self.decoderLinear = nn.Sequential(
-            nn.Linear(100, 4 * 4 * 64)
+            nn.Linear(100, 1024)
+	    nn.Linear(1024, 4*4*128),
         )
 
         self.decoder = nn.Sequential(
+	    nn.ConvTranspose2d(128, 64, 4, stride=2, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU(True),
 	    nn.ConvTranspose2d(64, 32, 4, stride=2, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU(True),
@@ -75,10 +80,7 @@ class autoencoder(nn.Module):
             nn.ConvTranspose2d(16, 8, 4, stride=2, padding=1),
             nn.BatchNorm2d(8),
             nn.ReLU(True),
-            nn.ConvTranspose2d(8, 4, 4, stride=2, padding=1),
-            nn.BatchNorm2d(4),
-            nn.ReLU(True),
-            nn.ConvTranspose2d(4, 1, 4, stride=2, padding=1),
+            nn.ConvTranspose2d(8, 1, 4, stride=2, padding=1),
             nn.Tanh()
         )
 
