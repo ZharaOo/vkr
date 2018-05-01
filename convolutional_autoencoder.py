@@ -132,8 +132,6 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
-        print("batch")
-
         if i % 30 == 0:
             print('({}, loss:{:.4f}),'
                   .format(i, loss.data[0]))
